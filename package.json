@@ -1,5 +1,5 @@
 {
-  "name": "quizz",
+  "name": "Quizz",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,7 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "mongodb": "^4.6.0",
     "next": "12.1.5",
+    "next-auth": "3.29.3",
     "react": "18.0.0",
     "react-dom": "18.0.0"
   },
