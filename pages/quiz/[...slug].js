@@ -96,8 +96,27 @@ function FilteredQuiz(props) {
 export async function getServerSideProps(context) {
     const { params } = context;
 
-    const filterData = params.query.slug;
-    console.log(filterData)
+    const [subject, difficulty] = params.slug;
+
+    if (!subject || !difficulty)
+        return {
+            hasError: true,
+        };
+
+    const filteredQuiz = await getFilteredQuiz({
+        subject,
+        difficulty,
+    });
+
+    console.log(filteredQuiz);
+
+    return {
+        quiz: {
+            data: filteredQuiz,
+            subject: numSubject,
+            difficulty: numDifficulty,
+        }
+    };
 }
 
 export default FilteredQuiz;
