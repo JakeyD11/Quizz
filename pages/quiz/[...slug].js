@@ -100,7 +100,7 @@ export async function getServerSideProps(context) {
 
     if (!subject || !difficulty)
         return {
-            hasError: true,
+            props: { hasError: true, }
         };
 
     const filteredQuiz = await getFilteredQuiz({
@@ -111,10 +111,12 @@ export async function getServerSideProps(context) {
     console.log(filteredQuiz);
 
     return {
-        quiz: {
-            data: filteredQuiz,
-            subject: numSubject,
-            difficulty: numDifficulty,
+        props: {
+            quiz: {
+                data: filteredQuiz,
+                subject: numSubject,
+                difficulty: numDifficulty,
+            }
         }
     };
 }
