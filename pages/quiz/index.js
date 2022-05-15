@@ -1,21 +1,35 @@
 import { getFeaturedQuiz } from '../../helpers/api-util'
 import QuizList from '../../components/quiz/quiz-list'
 import Head from 'next/head';
+import Fragment from 'react';
+import { useRouter } from 'next/router';
+import QuizSearch from '../../components/quiz/quiz-search';
+
+function AllQuizPage(props) {
+
+    const router = useRouter();
+    const { quiz } = props;
 
 
-function HomePage(props) {
+    function findQuizHandler(subject, difficulty) {
+        const fullPath = `/events/${subject}/${difficulty}`;
 
-    return <div>
-        <Head>
-            <title>Schwizz</title>
-            <meta
-                name='description'
-                content='Find a lot of great quiz...'
-            />
-        </Head>
+        router.push(fullPath);
+    }
 
-        <QuizList items={props.quiz} />
-    </div>
+    return (
+        <Fragment>
+            <Head>
+                <title>Schwizz</title>
+                <meta
+                    name='description'
+                    content='Find a lot of great quiz...'
+                />
+            </Head>
+            <QuizSearch onSearch={findQuizHandler} />
+            <QuizList items={quiz} />
+        </Fragment>
+    )
 }
 
 export async function getStaticProps() {
@@ -29,4 +43,4 @@ export async function getStaticProps() {
     }
 }
 
-export default HomePage;
+export default AllQuizPage;

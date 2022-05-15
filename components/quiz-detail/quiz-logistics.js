@@ -4,7 +4,7 @@ import classes from './quiz-logistics.module.css';
 
 function QuizLogistics(props) {
     //   const { date, address, image, imageAlt } = props;
-    const { subject, difficulty, question, answer, image } = props;
+    const { subject, difficulty, question, answer, image, imageAlt } = props;
 
 
     return (

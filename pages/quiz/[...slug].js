@@ -1,15 +1,18 @@
+import { Fragment, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import useSWR from 'swr';
+import Head from 'next/head';
 import { getFilteredQuiz } from '../../helpers/api-util';
 import QuizList from '../../components/quiz/quiz-list';
-import { Fragment, useEffect, useState } from 'react';
 import ResultsTitle from '../../components/quiz/results-title';
 import Button from '../../components/ui/button';
 import ErrorAlert from '../../components/ui/error-alert';
 
 
 function FilteredQuiz(props) {
-    const router = useRouter();
     const [loadedQuiz, setLoadedQuiz] = useState();
+    const router = useRouter();
+
     const filterData = router.query.slug;
 
     const { data, error } = useSWR(
@@ -47,7 +50,7 @@ function FilteredQuiz(props) {
         );
     }
 
-    if (props.hasError) {
+    if (!subject || !difficulty) {
 
         return <Fragment>
             <ErrorAlert><p> Invalid Parameters!</p></ErrorAlert>
@@ -58,7 +61,9 @@ function FilteredQuiz(props) {
         </Fragment>
     }
 
-    const filteredQuiz = props.quiz;
+    const filteredQuiz = loadedQuiz.filter((quiz) => {
+
+    })
 
 
     if (!filteredQuiz || filteredQuiz.length === 0) {
@@ -91,37 +96,8 @@ function FilteredQuiz(props) {
 export async function getServerSideProps(context) {
     const { params } = context;
 
-    const filterData = params.slug;
-
-    const filteredSubject = filterData[0];
-    const filteredDifficulty = filterData[1];
-
-    const numSubject = +filteredSubject;
-    const numDifficulty = +filteredDifficulty;
-
-    if (!subject || !difficulty)
-
-        return {
-            props: { hasError: true }
-            // notFound: true,
-            // redirect: {
-            //     destination: '/error'
-        };
-
-
-    const filteredQuiz = await getFilteredQuiz({
-        subject: Subject,
-        difficulty: Difficulty,
-    });
-
-    return {
-        props: {
-            Quiz: filteredQuiz,
-            subject: numSubject,
-            difficulty: numDifficulty,
-        }
-    },
+    const filterData = params.query.slug;
+    console.log(filterData)
 }
-
 
 export default FilteredQuiz;
