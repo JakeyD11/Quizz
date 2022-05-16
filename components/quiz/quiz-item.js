@@ -3,21 +3,22 @@ import Button from '../ui/button';
 
 function QuizItem(props) {
 
-    const { subject, difficulty, id } = props;
+    const { category, difficulty, id, summary, title, length } = props;
 
-    return <li className={classes.item}>
-        <div className={classes.content}>
-            <div className={classes.summary}>
-                <h2>{subject}</h2>
-                <div className={classes.date}>
-                    <h2>{difficulty}</h2>
-                </div>
+    return (
+        <div className={classes.wrapper}>
+            <div>
+                <h1 className={classes.title}>{title}</h1>
+                <h2 className={classes.title}>Subject: {category}</h2>
+                <h2 className={classes.title}>Difficulty: {difficulty}</h2>
+                <p className={classes.summary}>About: {summary}</p>
+                <p className={classes.amount}>Number of Questions: {length}</p>
             </div>
             <div className={classes.actions}>
                 <Button link={`/quiz/${id}`}>Details</Button>
             </div>
         </div>
-    </li>
+    )
 
 
 }

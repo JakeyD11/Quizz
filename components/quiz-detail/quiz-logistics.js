@@ -2,7 +2,7 @@ import LogisticsItem from './logistics-item';
 import classes from './quiz-logistics.module.css';
 
 function QuizLogistics(props) {
-    const { subject, difficulty, question, answer, image } = props;
+    const { subject, difficulty, question, answer, } = props;
 
     return (
         <section className={classes.logistics}>

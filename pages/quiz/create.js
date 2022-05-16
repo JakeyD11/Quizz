@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import classes from './create.module.css';
+import { useRouter } from 'next/router';
 
 function CreateQuiz() {
+    const router = useRouter();
     const [category, setCategory] = useState();
     const [difficulty, setDifficulty] = useState('easy');
     const [summary, setSummary] = useState();
@@ -28,26 +30,26 @@ function CreateQuiz() {
     }
 
     function submitHandler(event) {
-        event.preventDefault(); // this keeps the form from trying to submit itself
-        // which will cause the page to reload
+        event.preventDefault();
+
         const quiz = {
             category,
             difficulty,
             summary,
             title,
-            featured
-        }
-        // @TODO --- we'll come back and add the fetch
-        // functionality later to call the api to 
-        // actually create and save the quiz
-        console.log(quiz);
-        // Last step of this submit handler is to
-        // clear the inputs
-        setCategory('');
-        setDifficulty('');
-        setSummary('');
-        setTitle('');
-        setFeatured('');
+        };
+
+        fetch('/api/quiz', {
+            method: 'POST',
+            body: JSON.stringify(quiz),
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(() => {
+                router.push('/quiz');
+            });
     }
     return (
 

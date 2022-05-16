@@ -1,6 +1,7 @@
 import Button from "../components/ui/button";
 import { Fragment } from 'react';
 import classes from './index.module.css';
+import QuestionPage from "../components/question/questionList";
 
 function HomePage() {
   return (
@@ -31,7 +32,7 @@ function HomePage() {
         <Button link='/auth'>Log in</Button>
       </div>
 
-
+      <QuestionPage />
 
 
     </Fragment >
