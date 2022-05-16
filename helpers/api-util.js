@@ -1,34 +1,37 @@
+import Quiz from '../models/Quiz';
+import Submission from '../models/Submission';
+import Question from '../models/Question';
+import { connectToDatabase } from '../lib/db';
+
+
 export async function getAllQuiz() {
-    const response = await fetch('https://events-316a2-default-rtdb.europe-west1.firebasedatabase.app/quiz.json');
-    const data = await response.json();
+    await connectToDatabase();
 
-    const quiz = [];
+    const data = await Quiz.find();
 
-    for (const key in data) {
-        quiz.push({
-            id: key,
-            ...data[key]
-        });
-    }
-
-    return quiz;
+    return data;
 }
 
 export async function getFeaturedQuiz() {
+    await connectToDatabase();
+    const data = await Quiz.find({ featured: true });
 
-    const allQuiz = await getAllQuiz();
-    return allQuiz.filter((quiz) => quiz.isFeatured);
+    return data;
 }
 
 export async function getQuizById(id) {
-    const allQuiz = await getAllQuiz();
-    return allQuiz.find((quiz) => quiz.id === id);
+    await connectToDatabase();
+    let data = await Quiz.findById(id);
+    if (!data) {
+        return null;
+    }
+    data.questions = await Question.find({ quizId: id });
+    return data;
 }
 
-export async function getFilteredQuiz(data, subject, difficulty) {
+export async function getFilteredQuiz(category, difficulty) {
+    await connectToDatabase();
+    const data = await Quiz.find({ category, difficulty });
+    return data;
+}
 
-    return data
-        .filter(x => x.difficulty === difficulty)
-        .filter(y => y.subject === subject)
-
-};

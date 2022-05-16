@@ -17,13 +17,12 @@ function QuizDetailPage(props) {
     return (
         <Fragment>
             <Head>
-                <title>{quiz.title}</title>
+                <title>{quiz.subject}</title>
                 <meta
                     name='description'
                     content='amazing Quiz...'
                 />
             </Head>
-            <QuizSummary title={quiz.title} />
             <QuizLogistics subject={quiz.subject} difficulty={quiz.difficulty} image={quiz.image} ImageAlt={quiz.title} />
             < QuizContent >
                 <p>{quiz.description}</p>
@@ -34,26 +33,17 @@ function QuizDetailPage(props) {
     )
 }
 
-export async function getStaticProps(context) {
+export async function getServerSideProps(context) {
     const quizId = context.params.quizId;
 
-    const quiz = await getQuizById(quizId);
+    let quiz = await getQuizById(quizId);
+    quiz = JSON.parse(JSON.stringify(quiz));
     return {
         props: {
-            selectedQuiz: quiz
+            selectedQuiz: quiz,
         },
-        revalidate: 30
     };
 }
 
-export async function getStaticPaths() {
-
-    const quiz = await getFeaturedQuiz();
-    const paths = quiz.map(quiz => ({ params: { quizId: quiz.id } }));
-    return {
-        paths: paths,
-        fallback: 'blocking'
-    };
-}
 
 export default QuizDetailPage;

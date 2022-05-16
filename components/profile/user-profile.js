@@ -1,6 +1,6 @@
 import ProfileForm from './profile-form';
 import classes from './user-profile.module.css';
-import { getSession, } from 'next-auth/client';
+import { getSession, } from 'next-auth/react';
 import { useEffect } from 'react';
 import { useState } from 'react';
 

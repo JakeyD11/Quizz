@@ -1,24 +1,45 @@
-import { getFeaturedQuiz } from '../../helpers/api-util'
-import QuizList from '../../components/quiz/quiz-list'
-import Head from 'next/head';
-import Fragment from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
 import QuizSearch from '../../components/quiz/quiz-search';
+import QuizList from '../../components/quiz/quiz-list';
+import Head from 'next/head';
 
-function AllQuizPage(props) {
+function Quiz() {
+    const [quizItems, setQuizItems] = useState([]);
+    const [quizCategory, setQuizCategory] = useState('Featured');
+    const [quizDifficulty, setQuizDifficulty] = useState('Easy');
 
-    const router = useRouter();
-    const { quiz } = props;
+    useEffect(() => {
+        fetch('/api/quiz', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setQuizItems(data);
+            });
+    }, []);
 
-
-    function findQuizHandler(subject, difficulty) {
-        const fullPath = `/events/${subject}/${difficulty}`;
-
-        router.push(fullPath);
+    function handleGetSearch(category, difficulty) {
+        category = category.toLowerCase();
+        difficulty = difficulty.toLowerCase();
+        fetch(`/api/quiz?category=${category}&difficulty=${difficulty}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+            .then(res => res.json())
+            .then(data => {
+                setQuizItems(data);
+                setQuizCategory(category);
+                setQuizDifficulty(difficulty);
+            });
     }
 
     return (
-        <Fragment>
+        <div>
             <Head>
                 <title>Schwizz</title>
                 <meta
@@ -26,21 +47,14 @@ function AllQuizPage(props) {
                     content='Find a lot of great quiz...'
                 />
             </Head>
-            <QuizSearch onSearch={findQuizHandler} />
-            <QuizList items={quiz} />
-        </Fragment>
-    )
+            <QuizSearch onSearch={handleGetSearch} />
+            <h3>
+                {quizCategory} Quizzes{' '}
+                {quizCategory !== 'Featured' ? `(${quizDifficulty})` : ''}
+            </h3>
+            <QuizList items={quizItems} />
+        </div>
+    );
 }
 
-export async function getStaticProps() {
-    const featuredquiz = await getFeaturedQuiz();
-
-    return {
-        props: {
-            quiz: featuredquiz
-        },
-        revalidate: 1800
-    }
-}
-
-export default AllQuizPage;
+export default Quiz;

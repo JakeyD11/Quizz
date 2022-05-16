@@ -1,38 +1,44 @@
 import NextAuth from 'next-auth';
-import Providers from 'next-auth/providers';
+import Credentials from 'next-auth/providers/credentials';
 import { verifyPassword } from '../../../lib/auth';
 import { connectToDatabase } from '../../../lib/db';
-
+import User from '../../../models/User';
 
 export default NextAuth({
-
     session: {
-        jwt: true
+        strategy: 'jwt',
     },
     providers: [
-        Providers.Credentials({
+        Credentials({
             async authorize(credentials) {
-                const client = await connectToDatabase();
+                await connectToDatabase();
 
-                const usersCollection = client.db().collection('users');
-
-                const user = await usersCollection.findOne({ email: credentials.email })
+                const user = await User.findOne({
+                    email: credentials.email,
+                });
 
                 if (!user) {
-                    throw new Error('No user found!');
+                    throw new Error('No user found.');
                 }
 
-                const isValid = await verifyPassword(credentials.password, user.password)
+                const isValid = await verifyPassword(
+                    credentials.password,
+                    user.password
+                );
 
                 if (!isValid) {
-                    throw new Error('Login failed!');
+                    throw new Error('Invalid login credentials.');
                 }
-                client.close();
-                return { email: user.email };
-
-
-
+                return user;
+            },
+        }),
+    ],
+    callbacks: {
+        session: async ({ session, token }) => {
+            if (session?.user) {
+                session.user.id = token.sub;
             }
-        })
-    ]
+            return session;
+        },
+    },
 });

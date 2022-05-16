@@ -7,7 +7,7 @@ function ResultsTitle(props) {
     return (
         <section className={classes.title}>
             <h1>{subject} Quiz - {difficulty} mode</h1>
-            <Button link='/events'>Show all Quiz</Button>
+            <Button link='/quiz'>Show all Quiz</Button>
         </section>
     );
 }
