@@ -1,73 +1,116 @@
-import { useState } from 'react';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from 'react';
+import classes from '../../styles/question/QuestionCreate.module.scss';
+import Button from '../ui/Button';
 
-function CreateQuestion() {
-    const router = useRouter();
-    const [content, setContent] = useState();
-    const [answers, setAnswers] = useState();
-    const [correctAnswer, setCorrectAnswer] = useState();
+const QuestionForm = ({ type, questionData, onSubmit }) => {
+    const [question, setQuestion] = useState('');
+    const [answers, setAnswers] = useState({
+        correct: '',
+        alt1: '',
+        alt2: '',
+        alt3: '',
+    });
 
-
-
-    function handleChangeContent(quiz) {
-        setContent(quiz.target.value);
-    }
-
-    function handleChangeAnswers(quiz) {
-        const answers = [];
-
-        answers.push(quiz.target.value)
-        console.log(answers)
-        setAnswers
-    }
-
-
-    function submitHandler(event) {
-        event.preventDefault();
-
-        const quiz = {
-            content,
-            answers,
-            correctAnswer,
-
-        };
-
-        fetch('/api/quiz', {
-            method: 'POST',
-            body: JSON.stringify(quiz),
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        })
-            .then(res => res.json())
-            .then(() => {
-                router.push('/quiz');
+    useEffect(() => {
+        if (type === 'edit' && questionData) {
+            setQuestion(questionData.content);
+            setAnswers(() => {
+                const correct =
+                    questionData.answers[questionData.correctAnswer];
+                const answers = questionData.answers.filter(
+                    (_, i) => i !== questionData.correctAnswer
+                );
+                return {
+                    correct,
+                    alt1: answers[0],
+                    alt2: answers[1],
+                    alt3: answers[2],
+                };
             });
+        }
+    }, [type, questionData]);
+
+    function handleChangeQuestion(e) {
+        setQuestion(e.target.value);
     }
+
+    function handleChangeAnswer(e) {
+        const { name, value } = e.target;
+        setAnswers(st => ({
+            ...st,
+            [name]: value,
+        }));
+    }
+
+    function handleSubmitQuestion(e) {
+        e.preventDefault();
+        onSubmit({ question, answers });
+    }
+
     return (
-
-        <form className={classes.form} onSubmit={submitHandler}>
-            <h2>Create A new Question</h2>
-            <div>
-                <div className={classes.control}>
-                    <label htmlFor='content'> Question:</label>
-                    <textarea type='text' cols={40} rows={5} required onChange={handleChangeContent} value={content} />
+        <div className={classes.QuestionCreate} onSubmit={handleSubmitQuestion}>
+            {type !== 'edit' && (
+                <div className={classes.Header}>Create a question</div>
+            )}
+            <form className={classes.QuestionForm}>
+                <div className={classes.FormQuestion}>
+                    <label htmlFor='question'>Question</label>
+                    <textarea
+                        id='question'
+                        value={question}
+                        onChange={handleChangeQuestion}
+                    />
                 </div>
-                <div className={classes.control}>
-                    <label htmlFor='answer'>Quiz Subject</label>
-                    <input type='text' name='answer' required onChange={handleChangeAnswers} value={answers} />
-                    <input type='text' name='answer' required onChange={handleChangeAnswers} value={answers} />
-                    <input type='text' name='answer' required onChange={handleChangeAnswers} value={answers} />
-                    <input type='text' name='answer' required onChange={handleChangeAnswers} value={answers} />
+                <div className={classes.FormAnswers}>
+                    <div className={classes.FormGroup}>
+                        <label htmlFor='answer-correct'>Correct Answer</label>
+                        <input
+                            type='text'
+                            name='correct'
+                            value={answers.correct}
+                            onChange={handleChangeAnswer}
+                        />
+                    </div>
+                    <div className={classes.FormGroup}>
+                        <label htmlFor='answer-alt-1'>Incorrect Answer</label>
+                        <input
+                            type='text'
+                            name='alt1'
+                            id='answer-alt-1'
+                            value={answers.alt1}
+                            onChange={handleChangeAnswer}
+                        />
+                    </div>
+                    <div className={classes.FormGroup}>
+                        <label htmlFor='answer-alt-2'>Incorrect Answer</label>
+                        <input
+                            type='text'
+                            name='alt2'
+                            id='answer-alt-2'
+                            value={answers.alt2}
+                            onChange={handleChangeAnswer}
+                        />
+                    </div>
+                    <div className={classes.FormGroup}>
+                        <label htmlFor='answer-alt-3'>Incorrect Answer</label>
+                        <input
+                            type='text'
+                            name='alt3'
+                            id='answer-alt-3'
+                            value={answers.alt3}
+                            onChange={handleChangeAnswer}
+                        />
+                    </div>
                 </div>
-            </div>
-            <div className={classes.action}>
-                <button type='submit'>
-                    Submit
-                </button>
-            </div>
-
-        </form>
+                <div className={classes.Actions}>
+                    <Button theme='danger'>Cancel</Button>
+                    <Button type='submit'>
+                        {type !== 'edit' ? 'Add Question' : 'Update'}
+                    </Button>
+                </div>
+            </form>
+        </div>
     );
-}
-export default CreateQuiz;
+};
+
+export default QuestionForm;

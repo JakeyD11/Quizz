@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import QuizSearch from '../../components/quiz/quiz-search';
-import QuizList from '../../components/quiz/quiz-list';
+import QuizSearch from '../../components/quiz/QuizSearch';
+import QuizList from '../../components/quiz/QuizList';
 import Head from 'next/head';
 
 function Quiz() {

@@ -1,7 +1,6 @@
-import Button from "../components/ui/button";
+import Button from "../components/ui/Button";
 import { Fragment } from 'react';
-import classes from './index.module.css';
-import QuestionPage from "../components/question/questionList";
+import classes from './index.module.scss';
 
 function HomePage() {
   return (
@@ -31,9 +30,6 @@ function HomePage() {
         <p className={classes.text}>Please log in to continue...</p>
         <Button link='/auth'>Log in</Button>
       </div>
-
-      <QuestionPage />
-
 
     </Fragment >
   )

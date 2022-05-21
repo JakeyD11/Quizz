@@ -5,29 +5,32 @@ const quizSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
-
     },
     difficulty: {
-        type: String, // tells mongoose this value will be of this type, string
-        enum: ['easy', 'medium', 'hard'], //difficulty of test questions array
-        required: true
+        type: String,
+        enum: ['easy', 'medium', 'hard'],
     },
     category: {
         type: String,
-        required: true
-    },
-    summary: {
-        type: String,
+        required: true,
     },
     featured: {
         type: Boolean,
         default: false,
     },
+    summary: {
+        type: String,
+    },
     title: {
         type: String,
         required: true,
-    }
+    },
+    questions: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Question',
+        },
+    ],
 });
 
-export default mongoose.models.Quiz ||
-    mongoose.model('Quiz', quizSchema);
+export default mongoose?.models?.Quiz || mongoose.model('Quiz', quizSchema);

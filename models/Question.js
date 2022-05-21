@@ -1,7 +1,6 @@
 import mongoose from 'mongoose';
 
 const questionSchema = new mongoose.Schema({
-
     quizId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Quiz',
@@ -14,14 +13,13 @@ const questionSchema = new mongoose.Schema({
     answers: [
         {
             type: String,
-        }
+        },
     ],
     correctAnswer: {
         type: Number,
         required: true,
     },
-
 });
 
-export default mongoose.models.Question ||
+export default mongoose?.models?.Question ||
     mongoose.model('Question', questionSchema);

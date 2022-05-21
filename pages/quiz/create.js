@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import classes from './create.module.css';
 import { useRouter } from 'next/router';
+import subjects from '../../lib/subjects';
 
 function CreateQuiz() {
     const router = useRouter();
@@ -51,6 +52,13 @@ function CreateQuiz() {
                 router.push('/quiz');
             });
     }
+
+    const categorySelects = subjects.map(cat => (
+        <option key={cat.category} value={cat.category}>
+            {cat.label}
+        </option>
+    ));
+
     return (
 
         <form className={classes.form} onSubmit={submitHandler}>
@@ -60,10 +68,13 @@ function CreateQuiz() {
                     <label htmlFor='title'> Quiz Title</label>
                     <input type='text' name='title' required onChange={handleChangeTitle} value={title} />
                 </div>
-                <div className={classes.control}>
-                    <label htmlFor='catagory'>Quiz Subject</label>
-                    <input type='text' name='catagory' required onChange={handleChangeCategory} value={category} />
-                </div>
+                <label htmlFor='category'>Subject</label>
+                <select
+                    id='category'
+                    onChange={handleChangeCategory}
+                    value={category}>
+                    {categorySelects}
+                </select>
             </div>
             <div className={classes.control}>
                 <label htmlFor='difficulty'>Quiz Difficulty</label>

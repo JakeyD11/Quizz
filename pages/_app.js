@@ -1,6 +1,9 @@
-import '../styles/globals.css'
-import Layout from '../components/layout/layout';
+import '../styles/globals.scss';
+import Layout from '../components/layout/Layout';
 import { SessionProvider } from 'next-auth/react';
+import('../models/Question');
+import('../models/Quiz');
+import('../models/Submission');
 
 function MyApp({ Component, pageProps }) {
   return (
@@ -9,7 +12,7 @@ function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </Layout>
     </SessionProvider>
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

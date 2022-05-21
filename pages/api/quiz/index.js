@@ -1,18 +1,26 @@
 import { getSession } from 'next-auth/react';
 import { getFeaturedQuiz, getFilteredQuiz } from '../../../helpers/api-util';
+import { connectToDatabase } from '../../../lib/db';
 import Quiz from '../../../models/Quiz';
 import User from '../../../models/User';
 
 export default async function useHandler(req, res) {
+    let user;
     const {
         query: { category, difficulty },
         method,
     } = req;
     const session = await getSession({ req });
-    const user = await User.findById(session.user.id);
+    if (session) {
+        await connectToDatabase();
+        user = await User.findById(session.user.id);
+    }
 
     if (!user) {
-        return res.status(401).send('Please log in for access.');
+        return res.status(401).json({
+            status: 'unauthorized',
+            message: 'Please log in for access.',
+        });
     }
 
     let quizList = [];
@@ -26,7 +34,10 @@ export default async function useHandler(req, res) {
             return res.status(200).send(quizList);
         case 'POST':
             if (user.type === 'student') {
-                return res.status(401).send('Not Authorized');
+                return res.status(401).json({
+                    status: 'unauthorized',
+                    message: 'Not Authorized',
+                });
             }
             let quiz = await Quiz.create({ ...req.body, creator: user._id });
             return res.status(201).send(quiz);

@@ -1,12 +1,12 @@
 import mongoose from 'mongoose';
 
 const submissionSchema = new mongoose.Schema({
-    user_id: {
+    userId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User',
         required: true,
     },
-    quiz_id: {
+    quizId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Quiz',
         required: true,
@@ -14,15 +14,15 @@ const submissionSchema = new mongoose.Schema({
     answers: [
         {
             type: Number,
-        }
+        },
     ],
     score: {
         type: Number,
     },
     passing: {
         type: Boolean,
-    }
+    },
+});
 
-})
-export default mongoose.models.Submission ||
+export default mongoose?.models?.Submission ||
     mongoose.model('Submission', submissionSchema);
